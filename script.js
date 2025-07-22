@@ -1,57 +1,57 @@
-let tasks = [];
+document.addEventListener("DOMContentLoaded", () => {
+      let tasks = [];
 
-const addTask = () => {
-  const taskName = document.getElementById("taskName").value.trim();
-  const dueDate = document.getElementById("dueDate").value;
-  const status = document.getElementById("status").value;
+      const storedTasks = localStorage.getItem("tasks");
+      if (storedTasks) {
+        tasks = JSON.parse(storedTasks);
+        renderTasks();
+      }
 
-  if (!taskName || !dueDate) {
-    alert("Please enter task name and date");
-    return;
-  }
+      document.getElementById("addTaskBtn").addEventListener("click", addTask);
 
-  tasks.push({
-    name: taskName,
-    date: dueDate,
-    status: status,
-  });
+      function addTask() {
+        const taskName = document.getElementById("taskName").value.trim();
+        const dueDate = document.getElementById("dueDate").value;
 
-  document.getElementById("taskName").value = "";
-  document.getElementById("dueDate").value = "";
+        if (!taskName || !dueDate) {
+          alert("Please enter task name and date");
+          return;
+        }
 
-  renderTasks();
-};
+        const task = {
+          name: taskName,
+          date: dueDate,
+        };
 
-const renderTasks = () => {
-  const filter = document.getElementById("filter").value;
-  const today = new Date().toISOString().split("T")[0];
+        tasks.push(task);
+        localStorage.setItem("tasks", JSON.stringify(tasks));
 
-  let filteredTasks = tasks.filter((task) => {
-    if (filter === "all") {
-      return true;
-    } else if (filter === "upcoming") {
-      return task.date >= today;
-    } else {
-      return task.date < today;
-    }
-  });
+        document.getElementById("taskName").value = "";
+        document.getElementById("dueDate").value = "";
 
-  const taskList = document.getElementById("taskList");
-  taskList.innerHTML = "";
+        renderTasks();
+      }
 
-  if (filteredTasks.length === 0) {
-    taskList.innerHTML = "<p>No tasks found.</p>";
-    return;
-  }
+      function renderTasks() {
+        const today = new Date();
+        const completed = document.getElementById("completedTasks");
+        const pending = document.getElementById("pendingTasks");
 
-  filteredTasks.forEach((task) => {
-    const taskDiv = document.createElement("div");
-    taskDiv.className = "task";
-    taskDiv.innerHTML = `
-      <strong>${task.name}</strong><br>
-      Due: ${task.date}<br>
-      Status: ${task.status}
-    `;
-    taskList.appendChild(taskDiv);
-  });
-};
+        completed.innerHTML = "";
+        pending.innerHTML = "";
+
+        tasks.forEach((task) => {
+          const taskDate = new Date(task.date);
+          const daysLeft = Math.ceil((taskDate - today) / (24 * 60 * 60 * 1000));
+
+          const li = document.createElement("li");
+          li.textContent = `${task.name} - Due: ${task.date}`;
+
+          if (daysLeft < 0) {
+            completed.appendChild(li);
+          } else {
+            pending.appendChild(li);
+          }
+        });
+      }
+    });

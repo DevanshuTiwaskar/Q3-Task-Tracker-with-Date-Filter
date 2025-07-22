@@ -26,30 +26,35 @@
 </head>
 <body>
    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
 
      <h1>📝 Task Tracker</h1>
 
   <input type="text" id="taskName" placeholder="Enter task name" />
   <input type="date" id="dueDate" />
-  <select id="status">
-    <option value="Pending">Pending</option>
-    <option value="Completed">Completed</option>
-  </select>
-  <button onclick="addTask()">Add Task</button>
+  <button id="addTaskBtn">Add Task</button>
 
-  <h3>Filter:</h3>
-  <select id="filter" onchange="renderTasks()">
-    <option value="all">All</option>
-    <option value="upcoming">Upcoming</option>
-    <option value="past">Past</option>
-  </select>
+  <div id="taskList">
+    <h3>Completed Tasks</h3>
+    <div id="completedTasks"></div>
 
-  <div id="taskList"></div>
-
+    <h3>Pending Tasks</h3>
+    <div id="pendingTasks"></div>
+  </div>
 
 
 
     
     <script src="script.js"></script>
+</body>
+</html>
 </body>
 </html>
